@@ -9,7 +9,7 @@ from flask_migrate import Migrate
 from flask_swagger import swagger
 
 from admin import setup_admin
-from models import User, db, Personajes
+from models import User, db, Personajes, Planetas
 from utils import APIException, generate_sitemap
 
 #from models import Person
@@ -68,6 +68,8 @@ def listausuarios():
     user_serializado = list(map(lambda user: user.serialize(), user))
     return jsonify(user_serializado), 200
 
+
+
 @app.route('/personajes', methods=['POST'])
 def create_person():
     # POST request
@@ -102,6 +104,40 @@ def listapersonajes():
 def listapersonajesid(personajes_id):
     personajes = Personajes.query.get(personajes_id)
     return jsonify(personajes.serialize()), 200
+
+@app.route('/planetas', methods=['POST'])
+def create_planet():
+    # POST request
+    body = request.get_json()  # get the request body content
+    if body is None:
+        return "The request body is null", 400
+    if 'nombre' not in body:
+        return 'You need to specify the nombre', 400
+    if 'region' not in body:
+        return 'You need to specify the email', 400
+    if 'sistema' not in body:
+        return 'You need to specify the password', 400
+    if 'especie_nativa' not in body:
+        return 'You need to specify the password', 400
+
+
+    newPlaneta = Planetas(
+        nombre=body["nombre"], region=body["region"], sistema=body["sistema"], especie_nativa=body["especie_nativa"])
+    db.session.add(newPlaneta)
+    db.session.commit()
+    return jsonify(newPersonaje.serialize()), 200
+
+@app.route('/planetas', methods=['GET'])
+def listaplanetas():
+    planetas = Planetas.query.all()
+    planetas_serializado = list(
+    map(lambda planetas: planetas.serialize(), planetas))
+    return jsonify(planetas_serializado), 200
+
+@app.route('/planetas/<int:planetas_id>', methods=['GET'])
+def listaplanetasid(planetas_id):
+    planetas = Planetas.query.get(planetas_id)
+    return jsonify(planetas.serialize()), 200
 
 
 if __name__ == '__main__':

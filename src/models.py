@@ -39,3 +39,21 @@ class Personajes(db.Model):
             "faccion": self.faccion,
             "raza": self.raza,
         }
+
+class Planetas(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(120), unique=True, nullable=False)
+    region = db.Column(db.String(120), unique=False, nullable=False)
+    sistema = db.Column(db.String(200), unique=False, nullable=False)
+    especie_nativa = db.Column(db.String(200), unique=False, nullable=False)
+
+    def __repr__(self):
+        return '<Planetas %r>' % self.username
+
+    def serialize(self):
+        return {
+            "nombre": self.nombre,
+            "region": self.region,
+            "sistema": self.sistema,
+            "especie_nativa": self.especie_nativa,
+        }
